@@ -1,0 +1,25 @@
+# vim swp and python pyc
+*.swp
+*.pyc
+
+# data
+*.data
+*.npz
+*.zip
+*.pkl
+data/
+
+# figures
+*figures*/
+*.png
+*.pdf
+*.eps
+
+# tmp dir
+tmp/
+
+.directory
+.idea
+
+# logfiles
+*.log
