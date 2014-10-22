@@ -4,6 +4,7 @@ This is not the code that produced the original results. That code now exists
 somewhere in some archive I'm not willing to dig through.
 '''
 from brian import (Network, NeuronGroup, Equations, Connection,
+                   StateMonitor, SpikeMonitor,
                    second, ms, volt, mV, Hz)
 import numpy as np
 import matplotlib.pyplot as plt
@@ -33,9 +34,12 @@ def setup_sims(neuron_params, input_params, duration):
         simulation.add(inp_grp)
         inp_conn = Connection(inp_grp, neurons[idx], state='V', weight=weight)
         simulation.add(inp_conn)
-
+    tracemon = StateMonitor(neurons, 'V', record=True)
+    spikemon = SpikeMonitor(neurons)
+    simulation.add(tracemon, spikemon)
     return simulation
 
+duration = 10*second
 
 neuron_params = {}
 neuron_params['model'] = Equations("dV/dt = -V/(10*ms) : volt")
@@ -47,5 +51,11 @@ input_params = {}
 input_params['fout'] = 50*Hz
 input_params['weight'] = 0.5*mV
 input_params['num_inp'] = 50
+#input_params['fin'] = [10]*11
 
-simulation = setup_sims(neuron_params, input_params)
+simulation = setup_sims(neuron_params, input_params, duration)
+
+print("Running simulation for %.2f seconds ...")
+simulation.run(duration)
+
+
