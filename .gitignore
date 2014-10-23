@@ -14,6 +14,7 @@ data/
 *.png
 *.pdf
 *.eps
+*.gif
 
 # tmp dir
 tmp/
