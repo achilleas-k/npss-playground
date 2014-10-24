@@ -7,6 +7,8 @@ The original simulations were not written in brian, so it is possible the
 results produced from this file do not match the published results exactly.
 
 WARNING: Running this for all (6) figures can take a while.
+You can comment out the creation of the animated gif to speed things up, since
+that can take a while.
 
 '''
 from __future__ import print_function
