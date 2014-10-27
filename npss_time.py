@@ -52,7 +52,7 @@ def plot_figure(neuron_params, input_params):
     duration = 10*second
     simulation, monitors = setup_sims(neuron_params, input_params, duration)
     print("Running simulation for %.2f seconds ..." % duration)
-    simulation.run(duration)
+    simulation.run(duration, report="stderr")
     print("Simulation finished")
 
     tracemon = monitors["traces"]
@@ -61,18 +61,22 @@ def plot_figure(neuron_params, input_params):
 
     all_slopes = []
     for trace, spikes in zip(tracemon.values, spikemon.spiketimes.values()):
+        if len(spikes) < 2:
+            all_slopes.append([])
+            continue
         slopes = sl.tools.npss(trace, spikes, 0*mV, 15*mV, 10*ms, 2*ms)
-        mslope = np.mean(slopes)
-        all_slopes.append(mslope)
+        all_slopes.append(slopes)
 
     sync_conf = input_params["sync"]
     for sc, inp, out, slopes in zip(sync_conf, inputmon,
                                     spikemon.spiketimes.values(), all_slopes):
         inspikes = inp.spiketimes.values()
-        psth = sl.tools.PSTH(inspikes, duration=duration)
+        # convolve or low-pass filter
+        psth = sl.tools.PSTH(inspikes, bin=1*ms, duration=duration)
         plt.figure()
         plt.subplot(2,1,1)
-        plt.plot(tracemon.times, psth)
+        t = np.arange(0*second, duration, 1*ms)
+        plt.plot(t, psth)
         plt.subplot(2,1,2)
         plt.plot(out, slopes)
         file_params = input_params.copy()
@@ -96,5 +100,5 @@ input_params['fout'] = 5*Hz
 input_params['weight'] = 0.1*mV
 input_params['num_inp'] = 100
 input_params['sync'] = sync_conf
-#input_params['fin'] = [10]*11
+input_params['fin'] = [10]*len(sync_conf)
 plot_figure(neuron_params, input_params)
