@@ -100,5 +100,5 @@ input_params['fout'] = 5*Hz
 input_params['weight'] = 0.1*mV
 input_params['num_inp'] = 100
 input_params['sync'] = sync_conf
-input_params['fin'] = [10]*len(sync_conf)
+#input_params['fin'] = [10]*len(sync_conf)
 plot_figure(neuron_params, input_params)
